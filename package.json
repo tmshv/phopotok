@@ -10,10 +10,13 @@
         "preview": "vite preview"
     },
     "dependencies": {
+        "@mantine/core": "^7.17.1",
+        "@mantine/hooks": "^7.17.1",
         "maplibre-gl": "^5.2.0",
         "react": "^19.0.0",
         "react-dom": "^19.0.0",
-        "react-map-gl": "^8.0.1"
+        "react-map-gl": "^8.0.1",
+        "supercluster": "^8.0.1"
     },
     "devDependencies": {
         "@eslint/js": "^9.21.0",
@@ -24,6 +27,9 @@
         "eslint-plugin-react-hooks": "^5.1.0",
         "eslint-plugin-react-refresh": "^0.4.19",
         "globals": "^16.0.0",
+        "postcss": "^8.5.3",
+        "postcss-preset-mantine": "^1.17.0",
+        "postcss-simple-vars": "^7.0.1",
         "typescript": "^5.8.2",
         "typescript-eslint": "^8.24.1",
         "vite": "^6.2.0"
