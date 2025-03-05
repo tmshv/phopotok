@@ -3,14 +3,11 @@ import { useCallback, useEffect, useState } from "react"
 import { Marker, useMap } from "react-map-gl/maplibre"
 import { Badge } from "../../ui/Badge"
 import { PhotoCluster, RenderPhotoFunction } from "./PhotoCluster"
-import { InvisibleCircleLayer } from "./InvisibleCircleLayer"
 import type { GetImageFunction } from "./types"
 import useFeatures from "../../hooks/useFeatures"
 
 export type PhotoLayerProps = {
-    layerId: string
-    sourceId: string
-    sourceLayer?: string
+    featuresLayerId: string
     clusterRadius: number
     getImage: GetImageFunction
     iconLayout: ImageMarkerLayout
@@ -18,12 +15,11 @@ export type PhotoLayerProps = {
     iconSizeCluster?: number
 }
 
-export const PhotoLayer: React.FC<PhotoLayerProps> = ({ sourceId, layerId, sourceLayer, clusterRadius, getImage, iconLayout, iconSize, iconSizeCluster }) => {
-    const invisiblePointsLayer = `${layerId}-invisible-points`
+export const PhotoLayer: React.FC<PhotoLayerProps> = ({ featuresLayerId, clusterRadius, getImage, iconLayout, iconSize, iconSizeCluster }) => {
     const { current } = useMap()
     const [activeImage, setActiveImage] = useState<string | number | null>(null)
     const features = useFeatures({
-        layerId: invisiblePointsLayer,
+        layerId: featuresLayerId,
         map: current?.getMap(),
     })
 
@@ -107,21 +103,14 @@ export const PhotoLayer: React.FC<PhotoLayerProps> = ({ sourceId, layerId, sourc
     }, [iconLayout, iconSize, iconSizeCluster, getImage, activeImage])
 
     return (
-        <>
-            <InvisibleCircleLayer
-                layerId={invisiblePointsLayer}
-                sourceId={sourceId}
-                sourceLayer={sourceLayer}
-            />
-            <PhotoCluster
-                radius={clusterRadius}
-                data={features.filter(f => {
-                    const { src } = getImage(f.properties!)
-                    return !!src
-                }) as any}
-                renderPhoto={renderPhoto}
-                mapProperties={getImage}
-            />
-        </>
+        <PhotoCluster
+            radius={clusterRadius}
+            data={features.filter(f => {
+                const { src } = getImage(f.properties!)
+                return !!src
+            }) as any}
+            renderPhoto={renderPhoto}
+            mapProperties={getImage}
+        />
     )
 }

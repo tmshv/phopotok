@@ -1,9 +1,18 @@
 import Map, { Layer, Source } from "react-map-gl/maplibre";
+import { InvisibleCircleLayer } from "./InvisibleCircleLayer";
 import { PhotoLayer } from "./PhotoLayer";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 
-export default function Mapgl() {
+function vis(value: boolean): "visible" | "none" {
+    return value ? "visible" : "none"
+}
+
+export type MapglProps = {
+    mode: string
+}
+
+export default function Mapgl({ mode }: MapglProps) {
     return (
         <Map
             hash
@@ -21,9 +30,16 @@ export default function Mapgl() {
             }}
         >
             <Source type="geojson" data={"/20220627-neryungry.geojson"} id="neryungry" />
+            <InvisibleCircleLayer
+                id={"invisible-points"}
+                source={"neryungry"}
+            />
             <Layer
                 source="neryungry"
                 type="circle"
+                layout={{
+                    visibility: vis(mode === "Circles"),
+                }}
                 paint={{
                     "circle-color": "#000",
                     "circle-radius": 3,
@@ -31,18 +47,18 @@ export default function Mapgl() {
                     "circle-stroke-width": 1,
                 }}
             />
-            <PhotoLayer
-                layerId="photos"
-                sourceId="neryungry"
-                sourceLayer=""
-                clusterRadius={50}
-                iconLayout={"square"}
-                iconSize={50}
-                getImage={(x) => ({
-                    src: x!.thumbnail,
-                    value: x!.score,
-                })}
-            />
+            {mode !== "Photos" ? null : (
+                <PhotoLayer
+                    featuresLayerId="invisible-points"
+                    clusterRadius={50}
+                    iconLayout={"square"}
+                    iconSize={50}
+                    getImage={(x) => ({
+                        src: x!.thumbnail,
+                        value: x!.score,
+                    })}
+                />
+            )}
         </Map>
     );
 }
