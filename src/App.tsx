@@ -1,7 +1,7 @@
-import Map, { Layer, Source } from 'react-map-gl/maplibre';
+import Map, { Layer, Source } from "react-map-gl/maplibre";
 
-import 'maplibre-gl/dist/maplibre-gl.css';
-import './App.css'
+import "maplibre-gl/dist/maplibre-gl.css";
+import "./App.css";
 
 function App() {
     return (
