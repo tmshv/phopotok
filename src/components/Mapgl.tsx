@@ -10,9 +10,11 @@ function vis(value: boolean): "visible" | "none" {
 
 export type MapglProps = {
     mode: string
+    minScore: number
+    maxScore: number
 }
 
-export default function Mapgl({ mode }: MapglProps) {
+export default function Mapgl({ mode, minScore, maxScore }: MapglProps) {
     return (
         <Map
             hash
@@ -40,6 +42,10 @@ export default function Mapgl({ mode }: MapglProps) {
                 layout={{
                     visibility: vis(mode === "Circles"),
                 }}
+                filter={["all",
+                    [">=", ["get", "score"], minScore],
+                    ["<=", ["get", "score"], maxScore],
+                ]}
                 paint={{
                     "circle-color": "#000",
                     "circle-radius": 3,
@@ -47,7 +53,6 @@ export default function Mapgl({ mode }: MapglProps) {
                     "circle-stroke-width": 1,
                 }}
             />
-
             <Layer
                 id="heatmap"
                 source="neryungry"
@@ -55,7 +60,10 @@ export default function Mapgl({ mode }: MapglProps) {
                 layout={{
                     visibility: vis(mode === "Heatmap"),
                 }}
-                // maxzoom={10}
+                filter={["all",
+                    [">=", ["get", "score"], minScore],
+                    ["<=", ["get", "score"], maxScore],
+                ]}
                 paint={{
                     // Increase the heatmap weight based on frequency and property magnitude
                     'heatmap-weight': [
@@ -127,10 +135,16 @@ export default function Mapgl({ mode }: MapglProps) {
                     clusterRadius={50}
                     iconLayout={"square"}
                     iconSize={50}
-                    getImage={(x) => ({
-                        src: x!.thumbnail,
-                        value: x!.score,
-                    })}
+                    getImage={(x) => {
+                        const score = x!.score
+                        if(score <= minScore || score >= maxScore) {
+                            return {}
+                        }
+                        return {
+                            src: x!.thumbnail,
+                            value: score,
+                        }
+                    }}
                 />
             )}
         </Map>
