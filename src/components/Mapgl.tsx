@@ -138,7 +138,10 @@ export default function Mapgl({ mode, minScore, maxScore }: MapglProps) {
                     getImage={(x) => {
                         const score = x!.score
                         if(score <= minScore || score >= maxScore) {
-                            return {}
+                            return {
+                                src: "",
+                                value: 0,
+                            }
                         }
                         return {
                             src: x!.thumbnail,

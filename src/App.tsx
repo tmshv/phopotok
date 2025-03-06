@@ -1,4 +1,4 @@
-import { MantineProvider, Container, SegmentedControl, RangeSlider, Flex } from "@mantine/core";
+import { MantineProvider, SegmentedControl, RangeSlider, Flex } from "@mantine/core";
 import { theme } from "./theme";
 import Mapgl from "./components/Mapgl";
 
@@ -42,8 +42,6 @@ function App() {
                         max={1}
                         step={0.01}
                         marks={[
-                            // { value: 20, label: '20%' },
-                            // { value: 50, label: '50%' },
                             { value: 0.9, label: '90%' },
                         ]}
                     />
